@@ -115,5 +115,19 @@ describe('GET /tasks', () => {
     expect(res.body.length).toBe(1);
     expect(res.body[0].category).toBe('Work');
   });
+
+  it('should sort tasks by priority', async () => {
+    await Task.create([
+      { title: 'Task A', category: 'Work', priority: 'High', deadline: new Date() },
+      { title: 'Task B', category: 'Personal', priority: 'Medium', deadline: new Date() },
+      { title: 'Task B', category: 'Personal', priority: 'Low', deadline: new Date() },
+    ]);
+
+    const res = await request(app).get('/tasks').query({ sortBy: 'priority' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].priority).toBe('Low');
+    expect(res.body[2].priority).toBe('High');
+  });
 });
 
