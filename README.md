@@ -54,7 +54,7 @@ cd task-api
 
 ### 2. Setup environment variables
 
-Buat file `.env`:
+Make file `.env`:
 
 ```env
 PORT=5000
@@ -67,7 +67,7 @@ MONGO_URI=mongodb://mongo:27017/taskdb
 docker-compose up --build
 ```
 
-Server akan berjalan di `http://localhost:5000`
+Server will run on `http://localhost:5000`
 
 ---
 
