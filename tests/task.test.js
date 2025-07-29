@@ -13,7 +13,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  await Task.deleteMany(); // Bersihkan task setelah setiap test
+  await Task.deleteMany();
 });
 
 afterAll(async () => {
@@ -80,3 +80,40 @@ describe('POST /tasks', () => {
     expect(res.body.error).toMatch(/deadline/i);
   });
 });
+
+describe('GET /tasks', () => {
+  it('should return empty array when no tasks', async () => {
+    const res = await request(app).get('/tasks');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
+  });
+
+  it('should return all tasks', async () => {
+    await Task.create([
+      { title: 'Task 1', category: 'Work', priority: 'High', deadline: new Date() },
+      { title: 'Task 2', category: 'Home', priority: 'Medium', deadline: new Date() },
+    ]);
+
+    const res = await request(app).get('/tasks');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+    expect(res.body[0]).toHaveProperty('title');
+    expect(res.body[1]).toHaveProperty('category');
+  });
+
+  it('should filter tasks by category', async () => {
+    await Task.create([
+      { title: 'Task A', category: 'Work', priority: 'Low', deadline: new Date() },
+      { title: 'Task B', category: 'Personal', priority: 'High', deadline: new Date() },
+    ]);
+
+    const res = await request(app).get('/tasks').query({ category: 'Work' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(1);
+    expect(res.body[0].category).toBe('Work');
+  });
+});
+

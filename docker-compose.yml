@@ -6,7 +6,7 @@ services:
       - "5000:5000"
     environment:
       - PORT=${PORT}
-      - MONGODB_URI=${MONGO_URI}
+      - MONGODB_URI=${MONGODB_URI}
     depends_on:
       - mongo
     volumes:
