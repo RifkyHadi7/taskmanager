@@ -37,3 +37,9 @@ exports.getTasks = async (filters = {}, sort = {}) => {
 
     return Task.aggregate(pipeline);
 };
+
+exports.getTaskById = async (id) => await Task.findById(id);
+
+exports.updateTask = async (id, data) => await Task.findByIdAndUpdate(id, data, { new: true });
+
+exports.deleteTask = async (id) => await Task.findByIdAndDelete(id);

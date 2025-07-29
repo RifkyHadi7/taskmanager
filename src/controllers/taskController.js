@@ -1,4 +1,5 @@
 const taskService = require('../services/taskService');
+const mongoose = require('mongoose');
 
 exports.create = async (req, res, next) => {
     try {
@@ -30,3 +31,47 @@ exports.getTasks = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.getById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'Invalid task ID' });
+        }
+        
+        const task = await taskService.getTaskById(id);
+        if (!task) return res.status(404).json({ error: 'Task not found' });
+        res.json(task);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.update = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'Invalid task ID' });
+        }
+
+        const task = await taskService.updateTask(id, req.body);
+        if (!task) return res.status(404).json({ error: 'Task not found' });
+        res.json(task);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.remove = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'Invalid task ID' });
+        }
+        const task = await taskService.deleteTask(id);
+        if (!task) return res.status(404).json({ error: 'Task not found' });
+        res.json({ message: 'Task deleted' });
+    } catch (err) {
+        next(err);
+    }
+};
