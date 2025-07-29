@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: .
+    container_name: task-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGO_URI}
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6
+    container_name: task-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
